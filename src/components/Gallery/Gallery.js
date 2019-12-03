@@ -13,7 +13,9 @@ class Gallery extends React.Component {
     super(props);
     this.state = {
       images: [],
+      scrolling: false,
       galleryWidth: this.getGalleryWidth(),
+      page: 1,
     };
   }
   
@@ -25,7 +27,7 @@ class Gallery extends React.Component {
     }
   }
   getImages(tag) {
-    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=100&format=json&safe_search=1&nojsoncallback=1`;
+    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=100&format=json&safe_search=1&nojsoncallback=1&page=${this.state.page}`;
     const baseUrl = 'https://api.flickr.com/';
     axios({
       url: getImagesUrl,
@@ -40,11 +42,30 @@ class Gallery extends React.Component {
           res.photos.photo &&
           res.photos.photo.length > 0
         ) {
-          this.setState({images: res.photos.photo});
+          this.setState({images: [...this.state.images, ...res.photos.photo],  scrolling: false,});
         }
       });
   }
   
+  loadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1,
+        scrolling: true
+      },
+      this.getImages(this.props.tag)
+    );
+  };
+
+  handleScroll = () => { 
+    const lastImage = document.querySelector("div:last-child");
+    const lastLiOffset = lastImage.offsetTop + lastImage.clientHeight;
+    const pageOffset = window.pageYOffset + window.innerHeight;
+    if (pageOffset >= lastLiOffset-1) {
+          this.loadMore();
+      }
+  };
+
   onClone = (dto) => {
     const images = this.state.images;
     images.splice(images.findIndex(x => x.id === dto.id),0, dto);
@@ -53,6 +74,9 @@ class Gallery extends React.Component {
 
   componentDidMount() {
     this.getImages(this.props.tag);
+    this.scrollListener = window.addEventListener("scroll", e => {
+      this.handleScroll(e);
+    });
     this.setState({
       galleryWidth: document.body.clientWidth
     });
@@ -62,7 +86,7 @@ class Gallery extends React.Component {
     this.getImages(props.tag);
   
   }
-
+  
 render() {
   let i = 1;
   return(
