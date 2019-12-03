@@ -13,9 +13,11 @@ class Image extends React.Component {
     super(props);
     this.calcImageSize = this.calcImageSize.bind(this);
     this.state = {
-      size: 200
+      size: 200,
+      isFlip: false,
     };
   }
+  
 
   calcImageSize() {
     const {galleryWidth} = this.props;
@@ -23,7 +25,7 @@ class Image extends React.Component {
     const imagesPerRow = Math.round(galleryWidth / targetSize);
     const size = (galleryWidth / imagesPerRow);
     this.setState({
-      size
+      size,
     });
   }
 
@@ -35,10 +37,22 @@ class Image extends React.Component {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
   }
 
+  toggleFlip = () => {
+    this.setState({ isFlip: !this.state.isFlip });
+  }
+
   render() {
+    const imageClass = ["image-root"];
+
+    if(this.state.isFlip) {
+      imageClass.push('horizontal');
+    }
+    else {
+      imageClass.push('orginal');
+    }
     return (
       <div
-        className="image-root"
+        className={imageClass.join(' ')}
         style={{
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.state.size + 'px',
@@ -46,7 +60,7 @@ class Image extends React.Component {
         }}
         >
         <div>
-          <FontAwesome className="image-icon" name="arrows-alt-h" title="flip"/>
+          <FontAwesome className="image-icon" name="arrows-alt-h" title="flip" onClick={this.toggleFlip}/>
           <FontAwesome className="image-icon" name="clone" title="clone"/>
           <FontAwesome className="image-icon" name="expand" title="expand"/>
         </div>

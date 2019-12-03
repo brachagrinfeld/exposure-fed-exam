@@ -48,3 +48,26 @@
   }
 }
 
+.horizontal {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  transition: transform 0.4s;
+  > div {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);  
+  }
+
+}
+
+.orginal {
+  -moz-transform: none;
+  -o-transform: none;
+  -webkit-transform: none;
+  transform: none;
+  transition: transform 0.4s;
+}
+
