@@ -15,6 +15,7 @@ class Image extends React.Component {
     this.state = {
       size: 200,
       isFlip: false,
+      isBigger: false,
     };
   }
   
@@ -41,6 +42,10 @@ class Image extends React.Component {
     this.setState({ isFlip: !this.state.isFlip });
   }
 
+  onExpand = () => {
+    this.setState({ isBigger: !this.state.isBigger });
+  }
+
   onClone = () => {
     this.props.onClone(this.props.dto);
   }
@@ -53,6 +58,9 @@ class Image extends React.Component {
     }
     else {
       imageClass.push('orginal');
+    }
+    if(this.state.isBigger) {
+      imageClass.push('big-image');
     }
 
     return (
@@ -67,7 +75,7 @@ class Image extends React.Component {
         <div>
           <FontAwesome className="image-icon" name="arrows-alt-h" title="flip" onClick={this.toggleFlip}/>
           <FontAwesome className="image-icon" name="clone" title="clone" onClick={this.onClone}/>
-          <FontAwesome className="image-icon" name="expand" title="expand"/>
+          <FontAwesome className="image-icon" name="expand" title="expand" onClick={this.onExpand}/>
         </div>
       </div>
     );

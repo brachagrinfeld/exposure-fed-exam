@@ -71,3 +71,9 @@
   transition: transform 0.4s;
 }
 
+.big-image {
+  // transform-origin: top left;
+  transform: scale(2);
+  z-index: 1;
+}
+
