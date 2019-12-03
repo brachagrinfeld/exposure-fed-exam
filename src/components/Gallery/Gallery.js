@@ -13,10 +13,10 @@ class Gallery extends React.Component {
     super(props);
     this.state = {
       images: [],
-      galleryWidth: this.getGalleryWidth()
+      galleryWidth: this.getGalleryWidth(),
     };
   }
-
+  
   getGalleryWidth(){
     try {
       return document.body.clientWidth;
@@ -44,6 +44,12 @@ class Gallery extends React.Component {
         }
       });
   }
+  
+  onClone = (dto) => {
+    const images = this.state.images;
+    images.splice(images.findIndex(x => x.id === dto.id),0, dto);
+    this.setState({ images });
+  }
 
   componentDidMount() {
     this.getImages(this.props.tag);
@@ -54,14 +60,16 @@ class Gallery extends React.Component {
 
   componentWillReceiveProps(props) {
     this.getImages(props.tag);
+  
   }
 
-  render() {
-    return (
-      <div className="gallery-root">
+render() {
+  let i = 1;
+  return(
+    <div className="gallery-root">
         {this.state.images.map(dto => {
-          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth}/>;
-        })}
+            return <Image key={'image-' + i++} dto={dto} galleryWidth={this.state.galleryWidth} onClone={this.onClone}/>;
+          })}
       </div>
     );
   }

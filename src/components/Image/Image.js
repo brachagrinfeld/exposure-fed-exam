@@ -41,6 +41,10 @@ class Image extends React.Component {
     this.setState({ isFlip: !this.state.isFlip });
   }
 
+  onClone = () => {
+    this.props.onClone(this.props.dto);
+  }
+  
   render() {
     const imageClass = ["image-root"];
 
@@ -50,6 +54,7 @@ class Image extends React.Component {
     else {
       imageClass.push('orginal');
     }
+
     return (
       <div
         className={imageClass.join(' ')}
@@ -61,7 +66,7 @@ class Image extends React.Component {
         >
         <div>
           <FontAwesome className="image-icon" name="arrows-alt-h" title="flip" onClick={this.toggleFlip}/>
-          <FontAwesome className="image-icon" name="clone" title="clone"/>
+          <FontAwesome className="image-icon" name="clone" title="clone" onClick={this.onClone}/>
           <FontAwesome className="image-icon" name="expand" title="expand"/>
         </div>
       </div>
