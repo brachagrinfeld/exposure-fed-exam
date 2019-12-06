@@ -1,0 +1,9 @@
+.restore-icon {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.4s;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
