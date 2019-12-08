@@ -56,7 +56,7 @@ class Favorites extends React.Component {
     });  
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
       galleryWidth: document.body.clientWidth
     });
@@ -68,7 +68,7 @@ class Favorites extends React.Component {
     const { images } = this.state;
     return(
       <div className="favorites-root">
-        <Tab.Container id="left-tabs-example" defaultActiveKey={tags[0]} bg="dark">
+        <Tab.Container id="left-tabs-example" defaultActiveKey={tags[0]}>
           <Row>
             <Col sm={3}>
               <Nav variant="pills" className="flex-column">
@@ -80,7 +80,7 @@ class Favorites extends React.Component {
               </Nav>
             </Col>
             <Col sm={9}>
-              <Tab.Content>
+              <Tab.Content className="gallery-root">
               {tags.map((tag) => {
                   return <Tab.Pane eventKey={tag}>
                 {images[tag].map(dto => {

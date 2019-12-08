@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as fasfaHeart, faDownload, faClone, faExpand, faArrowsAltH } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as fasfaHeart, faClone, faExpand, faArrowsAltH, faCropAlt } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as farfaHeart } from '@fortawesome/free-regular-svg-icons'
 
 import './Image.scss';
+import CropImage from '../CropImage';
 
 class Image extends React.Component {
   static propTypes = {
@@ -18,12 +18,14 @@ class Image extends React.Component {
     super(props);
     this.calcImageSize = this.calcImageSize.bind(this);
     this.state = {
+      dto: null,
+      src: null,
+      showCrop: false,
       size: 200,
       isFlip: false,
       isBigger: false,
       style: {
         horizontal: false,
-        orginal: true,
         bigger: false,
         favorite: false,
       }
@@ -54,26 +56,11 @@ class Image extends React.Component {
 
   toggleFlip = () => {
     const style = this.state.style;
-    this.setState({ style: {...style, horizontal: !style.horizontal, orginal: !style.orginal} });   
+    this.setState({ style: {...style, horizontal: !style.horizontal} });   
   }
 
-  onDownload = () => {
-    const getImagesUrl = `services/rest/?method=flickr.photos.getSizes&api_key=522c1f9009ca3609bcbaf08545f067ad&format=json&safe_search=1&nojsoncallback=1&photo_id=${this.props.dto.id}`;
-    const baseUrl = 'https://api.flickr.com/';
-    axios({
-      url: getImagesUrl,
-      baseURL: baseUrl,
-      method: 'GET'
-    })
-      .then(res => res.data.sizes.size[0])
-      .then(res => {
-       const element = document.createElement('a');
-       const file = new Blob([res.url]);
-       element.href = URL.createObjectURL(file);
-       element.download = 'image.jpg';
-       element.click();
-
-      });  
+  onCrop = () => {
+    this.setState({ showCrop: true });
   }
 
   onExpand = () => {
@@ -85,6 +72,10 @@ class Image extends React.Component {
     this.props.onClone(this.props.dto);
   }
 
+  OnImageCrop = (src) => {
+    this.setState({ showCrop: !this.state.showCrop, src: src}) 
+ }
+
   markAsFavorite = () => {
     const favorites = localStorage.getObj("favorites") || {};
     const { dto, tag } = this.props;
@@ -95,7 +86,7 @@ class Image extends React.Component {
       this.props.onFavoritesChange && this.props.onFavoritesChange(dto);
     }
     else {
-      favorites[dto.id] = Object.assign(dto, { tag });
+      favorites[dto.id] = Object.assign(dto, { tag, src: this.state.src });
       localStorage.setObj("favorites", favorites);
     }
 
@@ -112,36 +103,36 @@ class Image extends React.Component {
   }
    
   render() {
-    const imageClass = ["image-root"];
-    const { style } = this.state;
-    Object.keys(style).forEach(key => {
-      if(style[key]) {
-        imageClass.push(key);
-      }  
-    });
-
+    const { style, showCrop } = this.state;
+    const imageWarpClass = ['image-root', style.bigger ? 'bigger': 'orginal'];
+    const imageClass = ['image-style', style.horizontal ? 'horizontal': 'orginal'];
+    
     const heartIcon = style.favorite ? fasfaHeart : farfaHeart;
     return (
-      <div
-        className={imageClass.join(' ')}
-        style={{
-          backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
-          width: this.state.size + 'px',
-          height: this.state.size + 'px'
-        }}
-        >
-          <i className="heart-circle"  onClick={this.markAsFavorite}>
-            <FontAwesomeIcon icon={heartIcon} color="red" />
-          </i>
+      <div className={imageWarpClass.join(' ')}
+      style={{
+        width: this.state.size + 'px',
+        height: this.state.size + 'px'
+      }}>
+      <CropImage show = { showCrop }
+                 onHide = { this.OnImageCrop }
+                 image = { this.urlFromDto(this.props.dto) }></CropImage>         
+      <img src={this.state.src || this.props.dto.src || this.urlFromDto(this.props.dto)}
+          className = {imageClass.join(' ')}
+          style = {{
+            width: this.state.size + 'px',
+            height: this.state.size + 'px',
+          }}
+      ></img> 
+          <FontAwesomeIcon className="heart-circle" icon={heartIcon} color="red"  onClick={this.markAsFavorite} />
         <div>
           <FontAwesomeIcon className="image-icon" icon={faArrowsAltH} title="flip" onClick={this.toggleFlip}/>
           <FontAwesomeIcon className="image-icon" icon={faClone} title="clone" onClick={this.onClone}/>
           <FontAwesomeIcon className="image-icon" icon={faExpand} title="expand" onClick={this.onExpand}/>
-          <FontAwesomeIcon className="image-icon" icon={faDownload} title="download" onClick={this.onDownload}/>
+          <FontAwesomeIcon className="image-icon" icon={faCropAlt} title="crop" onClick={this.onCrop}/>
         </div>
       </div>
     );
   }
 }
-
 export default Image;

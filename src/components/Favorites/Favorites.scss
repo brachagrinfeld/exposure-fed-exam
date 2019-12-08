@@ -4,3 +4,11 @@
   padding-top: 5%;
   margin-left: 5%;
 }
+.images-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: auto;
+  width: 100%;
+}

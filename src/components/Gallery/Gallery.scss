@@ -1,13 +1,17 @@
+.gallery-warper {
+  width: 70%;
+  padding-top: 5%;
+  margin: auto;
+}
+
 .gallery-root {
   text-align: center;
   display: flex;
-  width: 70%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: auto;
-  padding-top: 5%;
 }
 
 .gallery-header {
@@ -19,4 +23,14 @@
 
 .gallery-intro {
   font-size: 15pt;
+}
+
+.form-tag {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  margin: auto;}
+
+.tag-text-box {
+  flex-grow: 2;
 }

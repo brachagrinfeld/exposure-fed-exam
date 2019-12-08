@@ -56,13 +56,6 @@
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
   transition: transform 0.4s;
-
-  > div {
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);  
-  }
 }
 
 .orginal {
@@ -89,9 +82,8 @@
   border-radius: 50%;
   cursor: pointer;
   vertical-align: middle;
-  padding: 2%;
-  width: 32px;
-  height: 32px;
+  padding: 2.5%;
+  font-size: 30px;
   transition: 0.5s;
 
   &:hover {
@@ -99,7 +91,7 @@
   }
 }
 
-.heart {
-  color: red;
-}
+.image-style {
+  object-fit: cover;
 
+}

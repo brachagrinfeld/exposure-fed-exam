@@ -33,16 +33,16 @@ class Toaster extends React.Component {
             bottom: 0,
             left: 0,
             minWidth: '500px',
-      
           }}
           onClose={this.props.onClose}
           delay={5000} autohide
+          variant='dark'
         >
           <Toast.Header>
             <strong className="mr-auto">The image deleted</strong>
           </Toast.Header>
           <Toast.Body>
-            <span> you wand restore? </span>
+            <span>Do you want to restore?</span>
             <FontAwesomeIcon className="restore-icon" icon={faRedoAlt} title="restore" onClick={this.onRestore}/>
           </Toast.Body>
         </Toast>

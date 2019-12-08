@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import _ from 'lodash';
+import { Form, FormControl, Button } from 'react-bootstrap';
 
 import Image from '../Image';
 import './Gallery.scss';
 
 class Gallery extends React.Component {
-  static propTypes = {
-    tag: PropTypes.string
-  };
 
   constructor(props) {
     super(props);
     this.state = {
+      tag: 'any',
       images: [],
       scrolling: false,
       galleryWidth: this.getGalleryWidth(),
@@ -28,8 +28,8 @@ class Gallery extends React.Component {
     }
   }
 
-  getImages(tag) {
-    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=all&per_page=100&format=json&safe_search=1&nojsoncallback=1&page=${this.state.page}`;
+  getImages = () => {
+    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${this.state.tag}&tag_mode=any&per_page=100&format=json&safe_search=1&nojsoncallback=1&page=${this.state.page}`;
     const baseUrl = 'https://api.flickr.com/';
     axios({
       url: getImagesUrl,
@@ -56,7 +56,7 @@ class Gallery extends React.Component {
         page: this.state.page + 1,
         scrolling: true
       },
-      this.getImages(this.props.tag)
+      this.getImages()
     );
   };
 
@@ -71,12 +71,12 @@ class Gallery extends React.Component {
 
   onClone = (dto) => {
     const images = this.state.images;
-    images.splice(images.findIndex(x => x.id === dto.id),0, dto);
+    images.splice(_.findIndex(images, dto),0, dto);
     this.setState({ images });
   }
 
   componentDidMount() {
-    this.getImages(this.props.tag);
+    this.getImages();
     this.scrollListener = window.addEventListener("scroll", e => {
       this.handleScroll(e);
     });
@@ -85,19 +85,20 @@ class Gallery extends React.Component {
     });
   }
 
-  componentWillReceiveProps(props) {
-    this.getImages(props.tag);
-  
-  }
-  
   render() {
     let i = 1;
     return(
-      <div className="gallery-root">
-        {this.state.images.map(dto => {
-          return <Image key={'image-' + i++} dto={dto} galleryWidth={this.state.galleryWidth} 
-                  onClone={this.onClone} tag={this.props.tag}/>;
-        })}
+      <div className="gallery-warper">
+           <Form inline className='form-tag'>
+                <FormControl type="text" placeholder="Insert tag" className="mr-sm-2 tag-text-box" onChange={event => this.setState({tag: event.target.value})}/>
+                <Button variant="dark" onClick={this.getImages}>Get Images</Button>
+              </Form>
+        <div className="gallery-root">
+          {this.state.images.map(dto => {
+            return <Image key={'image-' + i++} dto={dto} galleryWidth={this.state.galleryWidth} 
+                    onClone={this.onClone} tag={this.state.tag}/>
+          })}
+        </div>
       </div>
       );
     }

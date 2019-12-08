@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import './App.scss';
@@ -12,9 +12,6 @@ class App extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      tag: 'car',
-    };
   }
 
   render() {
@@ -29,14 +26,10 @@ class App extends React.Component {
                 <Nav.Link as={Link} to="/">All</Nav.Link>
                 <Nav.Link as={Link} to="/favorites">Favorites</Nav.Link>
               </Nav>
-              <Form inline>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={event => this.setState({tag: event.target.value})} value={this.state.tag}/>
-                {/* <Button variant="outline-success">Search</Button> */}
-              </Form>
             </Navbar.Collapse>
           </Navbar>
           <div>
-          <Route exact path='/'  render={(props) => <Gallery {...props} tag={this.state.tag}/> }/>
+          <Route exact path='/' component={Gallery}/>
             <Route exact path="/favorites" component={Favorites} />
           </div>
         </BrowserRouter>      
