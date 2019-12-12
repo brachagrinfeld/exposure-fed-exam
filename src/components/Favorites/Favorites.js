@@ -11,7 +11,7 @@ class Favorites extends React.Component {
     super(props);
     this.state = {
       showToater: false,
-      images: {},
+      images: {}
     };
   }
   
@@ -24,7 +24,7 @@ class Favorites extends React.Component {
   }
 
   getImages() {
-    const favorites = localStorage.getObj("favorites") || {};
+    const favorites = localStorage.getObj('favorites') || {};
     const imagesSplit = Object.values(favorites).reduce((acc, dto) => {
       acc[dto.tag] = [...(acc[dto.tag] || []), dto];
       return acc;
@@ -33,27 +33,27 @@ class Favorites extends React.Component {
   }
   
   onFavoritesChange = (dto) => {
-    this.setState({ 
+    this.setState({
                     showToaster: true,
-                    imageDeleted:  dto,
-                  });      
-    this.getImages();        
+                    imageDeleted:  dto
+                  });
+    this.getImages();
   }
 
   onRestore = () => {
-    const favorites = localStorage.getObj("favorites") || {};
+    const favorites = localStorage.getObj('favorites') || {};
     const { imageDeleted } = this.state;
     favorites[imageDeleted.id] = imageDeleted;
-    localStorage.setObj("favorites", favorites); 
+    localStorage.setObj('favorites', favorites);
     this.getImages();
     this.onToasterClose();
   }
 
   onToasterClose = () => {
-    this.setState({ 
+    this.setState({
       showToaster: false,
-      imageDeleted: null,
-    });  
+      imageDeleted: null
+    });
   }
 
   componentWillMount() {
@@ -84,7 +84,7 @@ class Favorites extends React.Component {
               {tags.map((tag) => {
                   return <Tab.Pane eventKey={tag}>
                 {images[tag].map(dto => {
-                  return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth} 
+                  return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth}
                           onFavoritesChange={this.onFavoritesChange} tag={dto.tag}/>;
                 })}
                   </Tab.Pane>;

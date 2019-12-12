@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import axios from 'axios';
 import _ from 'lodash';
 import { Form, FormControl, Button } from 'react-bootstrap';
@@ -9,6 +9,9 @@ import './Gallery.scss';
 
 class Gallery extends React.Component {
 
+  static propTypes = {
+
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +22,7 @@ class Gallery extends React.Component {
       page: 1
     };
   }
-  
+
   getGalleryWidth() {
     try {
       return document.body.clientWidth;
@@ -44,12 +47,12 @@ class Gallery extends React.Component {
           res.photos.photo &&
           res.photos.photo.length > 0
         ) {
-          const images = this.state.scrolling ? [...this.state.images, ...res.photos.photo]: res.photos.photo;
-          this.setState({ images,  scrolling: false });
+          const images = this.state.scrolling ? [...this.state.images, ...res.photos.photo] : res.photos.photo;
+          this.setState({ images, scrolling: false });
         }
       });
   }
-  
+
   loadMore = () => {
     this.setState(
       {
@@ -64,44 +67,50 @@ class Gallery extends React.Component {
     const lastImage = document.querySelector('div:last-child');
     const lastLiOffset = lastImage.offsetTop + lastImage.clientHeight;
     const pageOffset = window.pageYOffset + window.innerHeight;
-    if (pageOffset >= lastLiOffset-1) {
-          this.loadMore();
-      }
+    if (pageOffset >= lastLiOffset - 1) {
+      this.loadMore();
+    }
   };
 
   onClone = (dto) => {
     const images = this.state.images;
-    images.splice(_.findIndex(images, dto),0, dto);
+    images.splice(_.findIndex(images, dto), 0, dto);
     this.setState({ images });
   }
 
+  onChangeTag = (event) => {
+    event.preventDefault();
+    this.setState({tag: event.currentTarget.elements[0].value}, () => this.getImages());
+  }
   componentDidMount() {
     this.getImages();
-    this.scrollListener = window.addEventListener("scroll", e => {
-      this.handleScroll(e);
-    });
+    this.scrollListener = window.addEventListener('scroll', this.handleScroll);
     this.setState({
       galleryWidth: document.body.clientWidth
     });
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+}
+
   render() {
     let i = 1;
-    return(
+    return (
       <div className="gallery-warper">
-           <Form inline className='form-tag'>
-                <FormControl type="text" placeholder="Insert tag" className="mr-sm-2 tag-text-box" onChange={event => this.setState({tag: event.target.value})}/>
-                <Button variant="dark" onClick={this.getImages}>Get Images</Button>
-              </Form>
+        <Form inline className='form-tag' onSubmit={this.onChangeTag}>
+          <FormControl type="text" placeholder="Insert tag" className="mr-sm-2 tag-text-box" />
+          <Button variant="dark" type='submit'>Get Images</Button>
+        </Form>
         <div className="gallery-root">
           {this.state.images.map(dto => {
-            return <Image key={'image-' + i++} dto={dto} galleryWidth={this.state.galleryWidth} 
-                    onClone={this.onClone} tag={this.state.tag}/>
+            return <Image key={'image-' + i++} dto={dto} galleryWidth={this.state.galleryWidth}
+              onClone={this.onClone} tag={this.state.tag} />
           })}
         </div>
       </div>
-      );
-    }
+    );
+  }
 }
 
 export default Gallery;

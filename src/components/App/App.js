@@ -29,10 +29,10 @@ class App extends React.Component {
             </Navbar.Collapse>
           </Navbar>
           <div>
-          <Route exact path='/' component={Gallery}/>
+            <Route exact path='/' component={Gallery} />
             <Route exact path="/favorites" component={Favorites} />
           </div>
-        </BrowserRouter>      
+        </BrowserRouter>
       </div>
     );
   }

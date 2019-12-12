@@ -14,7 +14,7 @@ describe('Image', () => {
 
   const mountImage = () => {
     return shallow(
-      <Image dto={sampleImage} galleryWidth={galleryWidth}/>,
+      <Image key={'image-'+sampleImage.id} dto={sampleImage} galleryWidth={galleryWidth}/>,
       {lifecycleExperimental: true, attachTo: document.createElement('div')}
     );
   };
@@ -23,8 +23,9 @@ describe('Image', () => {
     wrapper = mountImage();
   });
 
-  it('render 3 icons on each image', () => {
-    expect(wrapper.find('FontAwesome').length).to.equal(3);
+  it('render 4 icons on each image', () => {
+    const iconsWarpper = wrapper.find('.icons');
+    expect(iconsWarpper.find('FontAwesomeIcon').length).to.equal(4);
   });
 
   it('calc image size on mount', () => {

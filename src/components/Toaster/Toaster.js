@@ -25,14 +25,14 @@ class Toaster extends React.Component {
           bottom: 0,
           left: 0,
           minHeight: '100px',
-          minWidth: '500px',
+          minWidth: '500px'
         }}>
         <Toast
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
-            minWidth: '500px',
+            minWidth: '500px'
           }}
           onClose={this.props.onClose}
           delay={5000} autohide
